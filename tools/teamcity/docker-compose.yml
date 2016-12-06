@@ -1,0 +1,6 @@
+version: '2'
+services:
+  nexus:
+    image: jetbrains/teamcity-server
+    ports:
+     - "8111:8111"

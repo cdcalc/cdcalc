@@ -1,0 +1,14 @@
+dependencies {
+    compile gradleApi()
+}
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId 'cdcalc-gradle'
+            from components.java
+        }
+    }
+}
