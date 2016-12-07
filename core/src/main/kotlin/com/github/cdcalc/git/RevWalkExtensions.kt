@@ -4,17 +4,6 @@ import com.github.cdcalc.strategy.CommitTag
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevWalk
 
-fun <T> RevWalk.countFirstCommitUntil(start: RevCommit, matches: (RevCommit) -> T): Pair<T, Int>? {
-    this.walkFirstParentCurrentBranch(start).forEachIndexed { i, revCommit ->
-        val match = matches(revCommit)
-        if (null != match) {
-            return Pair(match, i)
-        }
-    }
-
-    return null
-}
-
 fun RevWalk.highestMergedTag(head: RevCommit, trackingBranch: Sequence<CommitTag>): CommitTag {
     return trackingBranch.first { tag ->
         val taggedCommit = this.parseCommit(tag.objectId)

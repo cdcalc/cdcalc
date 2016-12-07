@@ -22,7 +22,7 @@ fun taggedCommit(): (Git, CalculateConfiguration) -> SemVer {
             } else {
                 Pair(it.objectId, it.name)
             }
-        }.single() { it.first.equals(head) }
+        }.single { it.first.equals(head) }
 
         val tag = Tag(single.second)
         SemVer(tag.major, tag.minor, tag.patch)
