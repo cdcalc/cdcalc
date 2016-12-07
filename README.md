@@ -1,19 +1,8 @@
-# Kover
+# CDCalc
+CDCalc was started a way to learn kotlin and also is heavliy inspired by the simplicity of [GitVersion](https://github.com/GitTools/GitVersion) and if you have the possiblity you should use GitVersion instead.
 
-## Parent versions
-master
-    - tag
+CDCalc is also taking a much easier route to handle versioning of GitFlow since it requires a pre-release tag at the development branch together with the creation of a release branch. Given that tradeoff the logic to calculate the version is much easier.
 
-develop
-    - release branch is present use the number of commits from there
-    - find master tag
 
-feature
-    - check if branch is release branch is reachable
-    - check if develop is reachable
-
-release
-    - branch name and number of commit from develop
-
-hotfix
-   - tag on master and count commit from there
+## Goal
+The goal is to provide a simple way to automatically calculate a Semantic Version for projects that are delivered frequently enough to not be able to handle versioning manually but not frequent enough to be able to utilize Continous Deployment.
