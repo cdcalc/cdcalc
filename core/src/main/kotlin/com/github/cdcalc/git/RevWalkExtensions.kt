@@ -3,7 +3,6 @@ package com.github.cdcalc.git
 import com.github.cdcalc.strategy.CommitTag
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevWalk
-import org.eclipse.jgit.revwalk.filter.RevFilter
 
 fun <T> RevWalk.countFirstCommitUntil(start: RevCommit, matches: (RevCommit) -> T): Pair<T, Int>? {
     this.walkFirstParentCurrentBranch(start).forEachIndexed { i, revCommit ->
@@ -21,15 +20,6 @@ fun RevWalk.highestMergedTag(head: RevCommit, trackingBranch: Sequence<CommitTag
         val taggedCommit = this.parseCommit(tag.objectId)
         this.isMergedInto(taggedCommit, head)
     }
-}
-
-fun RevWalk.mergeBase(head: RevCommit, trackingBranch: RevCommit): RevCommit {
-    this.setRevFilter(org.eclipse.jgit.revwalk.filter.RevFilter.MERGE_BASE)
-    this.markStart(head)
-    this.markStart(trackingBranch)
-    val mergeBase = this.next()
-
-    return mergeBase
 }
 
 fun RevWalk.walkFirstParentCurrentBranch(start: RevCommit): Sequence<RevCommit> {

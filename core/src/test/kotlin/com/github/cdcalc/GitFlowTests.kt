@@ -8,7 +8,6 @@ import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.revwalk.RevWalkUtils
 import org.eclipse.jgit.revwalk.filter.RevFilter
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import java.time.Instant
 import kotlin.test.assertEquals

@@ -1,11 +1,9 @@
 package com.github.cdcalc.gitflow;
 
-import com.github.cdcalc.Calculate
-import com.github.cdcalc.GitFacts
 import com.github.cdcalc.*
-import org.eclipse.jgit.api.Git;
-import org.junit.Before;
-import org.junit.Test;
+import org.eclipse.jgit.api.Git
+import org.junit.Before
+import org.junit.Test
 import kotlin.test.assertEquals
 
 class HotfixBranchTests {

@@ -1,8 +1,6 @@
 package com.github.cdcalc.strategy
 
-import com.github.cdcalc.CalculateConfiguration
 import com.github.cdcalc.data.SemVer
-import org.eclipse.jgit.api.Git
 
 fun match(name: String): (String) -> Boolean {
     return { branch -> branch == name }

@@ -1,7 +1,5 @@
 package com.github.cdcalc.gitflow
 
-import com.github.cdcalc.Calculate
-import com.github.cdcalc.Tag
 import com.github.cdcalc.*
 import org.eclipse.jgit.api.Git
 import org.junit.Before

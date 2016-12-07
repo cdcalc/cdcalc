@@ -18,10 +18,6 @@ data class Tag(val major: Int, val minor: Int, val patch: Int) : Comparable<Tag>
     }
 }
 
-fun Tag.raw() : String {
-    return "${this.major}.${this.minor}.${this.patch}"
-}
-
 fun Tag(tagName: String): Tag {
     val toRegex = """v?(\d+)\.(\d+)\.(\d+)""".toRegex()
     val matchEntire = toRegex.find(tagName) ?: return Tag.Empty
