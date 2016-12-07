@@ -12,14 +12,14 @@ buildscript {
 
 allprojects {
     group = 'com.github.cdcalc'
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.1'
 }
 
 subprojects {
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'kotlin'
 
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.1'
     ext.kotlin_version = '1.0.5-2'
 
     repositories {

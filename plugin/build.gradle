@@ -11,4 +11,15 @@ publishing {
             from components.java
         }
     }
+
+    repositories {
+        maven {
+            name "release"
+            url nexusUrl
+            credentials {
+                username = nexusUsername
+                password = nexusPassword
+            }
+        }
+    }
 }
