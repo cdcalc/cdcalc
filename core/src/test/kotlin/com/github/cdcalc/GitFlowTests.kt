@@ -95,7 +95,7 @@ class GitFlowTests {
         val result = sut.gitFacts()
 
         // TODO: the beta increment is a build counter for develop and must be passed from the outside
-        assertEquals("2.1.0-beta.0", result.semVer.toString())
+        assertEquals("2.1.0-beta.4", result.semVer.toString())
     }
 
 

@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.revwalk.RevWalkUtils
 
 
 /**
@@ -35,9 +36,14 @@ fun trackRCTag(): (Git, CalculateConfiguration) -> SemVer {
             }
         }.associateBy(keySelector = {it.objectId}, valueTransform = {it})
 
+        var aheadCount = 0
         val commitTag: CommitTag = RevWalk(git.repository).use { walk ->
             val headCommit = walk.parseCommit(head)
-            walk.highestMergedTag(headCommit, branchCommit.values.sortedByDescending { it -> Tag(it.tagName) }.asSequence())
+            val highestMergedTag = walk.highestMergedTag(headCommit, branchCommit.values.sortedByDescending { it -> Tag(it.tagName) }.asSequence())
+
+            // TODO: we'll need to return this when it's working
+            aheadCount = RevWalkUtils.count(walk, headCommit, walk.parseCommit(highestMergedTag.objectId))
+            highestMergedTag
         }
 
         val baseTag = Tag(commitTag.tagName)
@@ -45,7 +51,7 @@ fun trackRCTag(): (Git, CalculateConfiguration) -> SemVer {
         val bumpedTag = baseTag.copy(minor = baseTag.minor + 1, patch = 0)
 
         if (branch.branch == "develop") {
-            SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("beta", branch.buildCounter.toString()))
+            SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("beta", aheadCount.toString()))
         } else {
             // TODO: this is a naive extraction of merge request id
             val version = branch.branch.replace("merge-requests/", "")
