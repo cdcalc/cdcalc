@@ -21,7 +21,16 @@ class Calculate(val git: Git) {
         println(resolve.name)
 
         val mapOf = mapOf(Pair("sha", resolve.name))
-        return GitFacts(branch, semVer.tag(), 0, semVer, mapOf)
+        val gitFacts = GitFacts(branch, semVer.tag(), 0, semVer, mapOf)
+
+        sendBuildNumberToCI(gitFacts)
+
+        return gitFacts
+    }
+
+    fun sendBuildNumberToCI(gitFacts: GitFacts) {
+        // TODO: this output is TC specific and need to be extracted later on.
+        println("##teamcity[buildNumber '${gitFacts.semVer}']")
     }
 }
 
