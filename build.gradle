@@ -1,3 +1,13 @@
+if (!project.hasProperty("nexusUrl")) {
+    ext.nexusUrl = ""
+}
+if (!project.hasProperty("nexusUsername")) {
+    ext.nexusUsername = ""
+}
+if (!project.hasProperty("nexusPassword")) {
+    ext.nexusPassword = ""
+}
+
 buildscript {
     ext.kotlin_version = '1.0.5-2'
     repositories {
