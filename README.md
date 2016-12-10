@@ -3,6 +3,9 @@ CDCalc was started a way to learn kotlin and also is heavliy inspired by the sim
 
 CDCalc is also taking a much easier route to handle versioning of GitFlow since it requires a pre-release tag at the development branch together with the creation of a release branch. Given that tradeoff the logic to calculate the version is much easier.
 
+## CI
+[![Build Status](https://travis-ci.org/cdcalc/cdcalc.svg?branch=master)](https://travis-ci.org/cdcalc/cdcalc)
+[![codecov](https://codecov.io/gh/cdcalc/cdcalc/branch/master/graph/badge.svg)](https://codecov.io/gh/cdcalc/cdcalc)
 
 ## Goal
 The goal is to provide a simple way to automatically calculate a Semantic Version for projects that are delivered frequently enough to not be able to handle versioning manually but not frequent enough to be able to utilize Continous Deployment.
