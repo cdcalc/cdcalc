@@ -26,3 +26,7 @@ fun Tag(tagName: String): Tag {
         return Tag(it[1]!!.value.toInt(), it[2]!!.value.toInt(), it[3]!!.value.toInt())
     }
 }
+
+fun Tag.bumpMinor(): Tag {
+    return this.copy(minor = this.minor + 1, patch = 0)
+}
