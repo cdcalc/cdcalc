@@ -1,6 +1,6 @@
 package com.github.cdcalc.git
 
-import com.github.cdcalc.strategy.CommitTag
+import com.github.cdcalc.data.CommitTag
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevWalk
 
