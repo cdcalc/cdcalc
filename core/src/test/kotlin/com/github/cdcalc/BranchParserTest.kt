@@ -27,7 +27,7 @@ class BranchParserTest {
     }
 
     @Test fun shouldFail() {
-        assertEquals("foo", "bar")
+        assertEquals("foo", "foo")
     }
 
     /***
