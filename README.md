@@ -3,6 +3,12 @@ CDCalc was started a way to learn kotlin and also is heavliy inspired by the sim
 
 CDCalc is also taking a much easier route to handle versioning of GitFlow since it requires a pre-release tag at the development branch together with the creation of a release branch. Given that tradeoff the logic to calculate the version is much easier.
 
+## Usage
+At the moment there's only a gradle plugin but the core project should be self contained and it's possible to extend it with a cli if needed.
+
+### Gradle plugin
+The easiest way to use it, is the gradle plugin https://plugins.gradle.org/plugin/com.github.cdcalc see the `sample` folder for more information.
+
 ## CI
 [![Build Status](https://travis-ci.org/cdcalc/cdcalc.svg?branch=master)](https://travis-ci.org/cdcalc/cdcalc)
 [![codecov](https://codecov.io/gh/cdcalc/cdcalc/branch/master/graph/badge.svg)](https://codecov.io/gh/cdcalc/cdcalc)
