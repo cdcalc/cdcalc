@@ -1,3 +1,7 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
 dependencies {
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.5.0.201609210915-r'
     testCompile 'org.slf4j:slf4j-nop:1.7.21'
@@ -5,22 +9,64 @@ dependencies {
 
 apply plugin: 'maven-publish'
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId 'cdcalc-core'
-            from components.java
+task sourcesJar(type: Jar, dependsOn: project.classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: project.javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "MIT License"
+            url "http://www.opensource.org/licenses/mit-license.php"
+            distribution "repo"
         }
     }
+    developers {
+        developer {
+            id "orjan.sjoholm"
+            name "Örjan Sjöholm"
+            email "orjansjoholm@gmail.com"
+        }
+    }
+}
 
-    repositories {
-        maven {
-            name "release"
-            url nexusUrl
-            credentials {
-                username = nexusUsername
-                password = nexusPassword
+publishing {
+    publications {
+        corePublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId 'com.github.cdcalc'
+            artifactId 'cdcalc-core'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Calculate upcoming version from git commits')
+                root.appendNode('name', 'cdcalc')
+                root.appendNode('url', 'https://github.com/cdcalc/cdcalc')
+                root.children().last() + pomConfig
             }
         }
+    }
+}
+
+
+bintray {
+    user = ''
+    key = ''
+    publications = ['corePublication']
+    pkg {
+        repo = 'cdcalc'
+        userOrg = 'cdcalc'
+        name = 'cdcalc'
+        websiteUrl = "https://github.com/cdcalc/cdcalc"
+        vcsUrl = "https://github.com/cdcalc/cdcalc"
+        licenses = ["MIT"]
+        publish = true
     }
 }
