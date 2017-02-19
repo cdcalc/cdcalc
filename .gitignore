@@ -4,3 +4,4 @@ build
 repo
 classes
 gradle.properties
+.gradletasknamecache
