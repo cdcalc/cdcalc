@@ -2,15 +2,17 @@ buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
-    }
-    dependencies {
-        classpath 'com.github.cdcalc:cdcalc-gradle:0.0.1-SNAPSHOT'
+        maven {
+            url  "http://dl.bintray.com/cdcalc/cdcalc"
+        }
     }
 }
 
-version = '0.0.1-SNAPSHOT'
+plugins {
+    id "com.github.cdcalc" version "0.0.2"
+}
 
-apply plugin: 'cdcalc'
+version = '0.0.1-SNAPSHOT'
 
 cdcalc {
     repository = '../.git'
