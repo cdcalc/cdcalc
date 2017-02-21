@@ -26,3 +26,19 @@ fun Tag(tagName: String): Tag {
         return Tag(it[1]!!.value.toInt(), it[2]!!.value.toInt(), it[3]!!.value.toInt())
     }
 }
+
+fun Tag.bump(): Tag {
+    if (this.major == 0 && this.minor == 0) {
+        return this.bumpPatch()
+    }
+
+    return this.bumpMinor()
+}
+
+fun Tag.bumpMinor(): Tag {
+    return this.copy(minor = this.minor + 1, patch = 0)
+}
+
+fun Tag.bumpPatch(): Tag {
+    return this.copy(patch = this.patch + 1)
+}

@@ -2,12 +2,13 @@ package com.github.cdcalc.strategy
 
 import com.github.cdcalc.CalculateConfiguration
 import com.github.cdcalc.Tag
+import com.github.cdcalc.data.CommitTag
 import com.github.cdcalc.data.SemVer
+import com.github.cdcalc.git.taggedCommits
 import com.github.cdcalc.extensions.use
 import com.github.cdcalc.git.highestMergedTag
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants
-import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.revwalk.RevWalkUtils
 
@@ -17,29 +18,19 @@ import org.eclipse.jgit.revwalk.RevWalkUtils
  * - Tag and commit must match
  * - If not tag exists, we're doomed
  */
-
-data class CommitTag (
-    val objectId: ObjectId,
-    val tagName: String
-)
-
 fun trackRCTag(): (Git, CalculateConfiguration) -> SemVer {
     return { git, branch ->
         val head = git.repository.resolve(Constants.HEAD)
 
-        val branchCommit: Map<ObjectId, CommitTag> = git.tagList().call().map {
-            val peel = git.repository.peel(it)
-            if (peel.peeledObjectId != null) {
-                CommitTag(peel.peeledObjectId, it.name)
-            } else {
-                CommitTag(it.objectId, it.name)
-            }
-        }.associateBy(keySelector = {it.objectId}, valueTransform = {it})
+        val taggedCommits = git.taggedCommits()
 
         var aheadCount = 0
         val commitTag: CommitTag = RevWalk(git.repository).use { walk ->
             val headCommit = walk.parseCommit(head)
-            val highestMergedTag = walk.highestMergedTag(headCommit, branchCommit.values.sortedByDescending { it -> Tag(it.tagName) }.asSequence())
+            val highestMergedTag = walk.highestMergedTag(
+                    headCommit,
+                    taggedCommits.values.sortedByDescending { it -> Tag(it.tagName) }.asSequence()
+            )
 
             // TODO: we'll need to return this when it's working
             aheadCount = RevWalkUtils.count(walk, headCommit, walk.parseCommit(highestMergedTag.objectId))
