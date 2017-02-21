@@ -1,7 +1,6 @@
 package com.github.cdcalc
 
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.transport.CredentialsProvider
 
 class CutReleaseBranch(val git: Git) {
     fun cutReleaseBranch(requiredBranch: String = "develop") {
@@ -12,21 +11,21 @@ class CutReleaseBranch(val git: Git) {
         val latestTag = git.tagList().call()
                 .map { Tag(it.name) }
                 .plus(Tag.Empty)
-                .filter { Tag.Empty != it }
                 .sortedDescending()
                 .first()
 
-        val bumpedVersion = latestTag.bumpMinor()
+        val bumpedVersion = latestTag.bump()
         val releaseBranch = "release/${bumpedVersion.major}.${bumpedVersion.minor}.${bumpedVersion.patch}"
         val releaseTag = "v${bumpedVersion.major}.${bumpedVersion.minor}.${bumpedVersion.patch}-rc.0"
+
         git.branchCreate().setName(releaseBranch).call()
         git.tag()
                 .setMessage("Release candidate $releaseTag")
                 .setName(releaseTag)
                 .call()
 
-        // TODO: putting this under test is almost impossible, we'll need to pass
-        // a list of credential providers
+        // NOTE: it's possible to push to git here but different credentials and since it's hard to test we'll
+        // wait with the implementation below.
         // git.push().setCredentialsProvider(CredentialsProvider.getDefault()).call()
     }
 }

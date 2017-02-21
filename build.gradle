@@ -22,7 +22,7 @@ buildscript {
 
 allprojects {
     group = 'com.github.cdcalc'
-    version = '0.0.2'
+    version = '0.0.3-SNAPSHOT'
 }
 
 subprojects {
@@ -30,11 +30,12 @@ subprojects {
     apply plugin: 'kotlin'
     apply plugin: 'jacoco'
 
-    version = '0.0.2'
+    version = '0.0.3-SNAPSHOT'
     ext.kotlin_version = '1.0.5-2'
 
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     dependencies {

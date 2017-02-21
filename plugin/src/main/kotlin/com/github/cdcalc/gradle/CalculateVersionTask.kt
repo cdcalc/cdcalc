@@ -3,11 +3,18 @@ package com.github.cdcalc.gradle
 import com.github.cdcalc.Calculate
 import org.eclipse.jgit.api.Git
 import org.gradle.api.DefaultTask
-import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 open class CalculateVersionTask : DefaultTask() {
+    override fun getDescription(): String {
+        return "Will calculate the upcoming version tracking branches and tags"
+    }
+
+    override fun getGroup(): String {
+        return "Release management"
+    }
+
     @Suppress("unused")
     @TaskAction fun calculateVersion() {
         val config: CDCalcExtensions = project.extensions.findByType(CDCalcExtensions::class.java) ?: CDCalcExtensions()
