@@ -35,7 +35,6 @@ class CutReleaseBranchTest {
             it.name == "refs/heads/release/1.1.0" }
 
         val head = git.repository.resolve(Constants.HEAD)
-        git.prettyLog()
 
         assertEquals(head, releaseBranch.objectId)
     }
@@ -48,6 +47,4 @@ class CutReleaseBranchTest {
 
         assertEquals("refs/tags/v1.1.0-rc.0", commitTag!!.tagName)
     }
-
-
 }
