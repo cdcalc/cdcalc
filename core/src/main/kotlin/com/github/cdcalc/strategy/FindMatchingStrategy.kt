@@ -17,24 +17,22 @@ fun matches(searchString: String): (String) -> Boolean {
 /**
  * NOTE: In the long run we'll need to make this configurable
  */
-fun findBranchStrategy(branch: String): (org.eclipse.jgit.api.Git, com.github.cdcalc.CalculateConfiguration) -> SemVer {
+fun findBranchStrategy(branch: String, trackOrigin: String = ""): (org.eclipse.jgit.api.Git, com.github.cdcalc.CalculateConfiguration) -> SemVer {
     println("Trying to find matching branch for: " + branch)
 
     val matchers = mapOf(
             Pair(com.github.cdcalc.strategy.match("master"), com.github.cdcalc.strategy.taggedCommit()),
-            Pair(com.github.cdcalc.strategy.matches("hotfix/.*"), trackingBranch("master")),
-            Pair(com.github.cdcalc.strategy.matches("release/.*"), trackingBranch("develop")),
+            Pair(com.github.cdcalc.strategy.matches("hotfix/.*"), trackingBranch("${trackOrigin}master")),
+            Pair(com.github.cdcalc.strategy.matches("release/.*"), trackingBranch("${trackOrigin}develop")),
             Pair(com.github.cdcalc.strategy.matches("merge-requests/.*"), com.github.cdcalc.strategy.trackRCTag()),
             Pair(com.github.cdcalc.strategy.matches("develop"), com.github.cdcalc.strategy.trackRCTag())
     )
 
-    val strategy = matchers.entries.singleOrNull() {
+    val strategy = matchers.entries.singleOrNull {
         it -> it.key(branch)
     } ?: throw com.github.cdcalc.strategy.StrategyNotFoundException("Couldn't find a matching strategy for $branch")
 
     return strategy.value
 }
 
-class StrategyNotFoundException(message: String) : Throwable(message) {
-
-}
+class StrategyNotFoundException(message: String) : Throwable(message)

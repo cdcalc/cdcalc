@@ -4,4 +4,5 @@ open class CDCalcExtensions() {
     var repository: String = ".git"
     var calculatedVersion: String = "0.0.1"
     var branch: String = ""
+    var trackOrigin: String = "origin/"
 }
