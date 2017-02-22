@@ -20,13 +20,9 @@ open class CalculateVersionTask : DefaultTask() {
         val config: CDCalcExtensions = project.extensions.findByType(CDCalcExtensions::class.java) ?: CDCalcExtensions()
 
         val git = Git.open(File(config.repository))
-        try {
-            val gitFacts = Calculate(git).gitFacts()
-            config.calculatedVersion = gitFacts.semVer.toString()
-            config.branch = gitFacts.branch
-        } catch (e: Throwable) {
-            println("Something when bad let's fallback 0.0.1" + e.message)
-            config.calculatedVersion = "0.0.1"
-        }
+        val gitFacts = Calculate(git).gitFacts()
+
+        config.calculatedVersion = gitFacts.semVer.toString()
+        config.branch = gitFacts.branch
     }
 }
