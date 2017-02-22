@@ -28,13 +28,11 @@ fun findBranchStrategy(branch: String): (org.eclipse.jgit.api.Git, com.github.cd
             Pair(com.github.cdcalc.strategy.matches("develop"), com.github.cdcalc.strategy.trackRCTag())
     )
 
-    val strategy = matchers.entries.singleOrNull() {
+    val strategy = matchers.entries.singleOrNull {
         it -> it.key(branch)
     } ?: throw com.github.cdcalc.strategy.StrategyNotFoundException("Couldn't find a matching strategy for $branch")
 
     return strategy.value
 }
 
-class StrategyNotFoundException(message: String) : Throwable(message) {
-
-}
+class StrategyNotFoundException(message: String) : Throwable(message)
