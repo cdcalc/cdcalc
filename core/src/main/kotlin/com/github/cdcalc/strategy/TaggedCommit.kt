@@ -12,7 +12,7 @@ import org.eclipse.jgit.lib.Constants
  * - If not tag exists, we're doomed
  */
 fun taggedCommit(): (Git, CalculateConfiguration) -> SemVer {
-    return { git, branch ->
+    return { git, _ ->
         val head = git.repository.resolve(Constants.HEAD)
 
         val single = git.tagList().call().map {

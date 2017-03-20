@@ -5,7 +5,6 @@ import com.github.cdcalc.Tag
 import com.github.cdcalc.data.CommitTag
 import com.github.cdcalc.data.SemVer
 import com.github.cdcalc.git.taggedCommits
-import com.github.cdcalc.extensions.use
 import com.github.cdcalc.git.highestMergedTag
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants

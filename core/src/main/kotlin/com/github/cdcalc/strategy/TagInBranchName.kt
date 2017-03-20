@@ -3,7 +3,6 @@ package com.github.cdcalc.strategy
 import com.github.cdcalc.CalculateConfiguration
 import com.github.cdcalc.Tag
 import com.github.cdcalc.data.SemVer
-import com.github.cdcalc.extensions.use
 import com.github.cdcalc.git.countCommits
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants
