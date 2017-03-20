@@ -1,6 +1,5 @@
 package com.github.cdcalc
 
-import com.github.cdcalc.extensions.use
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.MergeCommand
 import org.eclipse.jgit.lib.Ref
