@@ -24,7 +24,10 @@ class BranchParserTest {
 
     @Test fun shouldReturnEmptyTagIfNotAReleaseBranch() {
         assertEquals(Tag.Empty, parser.findTagInBranchName("master"))
+    }
 
+    @Test fun shouldFail() {
+        assertEquals("foo", "foo")
     }
 
     /***
