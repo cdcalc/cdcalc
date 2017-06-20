@@ -9,13 +9,13 @@ if (!project.hasProperty("nexusPassword")) {
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.1.2-5'
     repositories {
         mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -31,7 +31,7 @@ subprojects {
     apply plugin: 'jacoco'
 
     version = '0.0.5-SNAPSHOT'
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.1.2-5'
 
     repositories {
         jcenter()
