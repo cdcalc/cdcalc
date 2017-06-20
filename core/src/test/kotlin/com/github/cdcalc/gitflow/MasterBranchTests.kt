@@ -20,7 +20,6 @@ class MasterBranchTests {
     fun should_resolve_master_branch() {
         git.checkout("master")
 
-        git.prettyLog()
         val result = sut.gitFacts()
 
         assertEquals("master", result.branch)
@@ -35,7 +34,6 @@ class MasterBranchTests {
         git.createCommit().createCommit()
         git.tag().setName("v1.3.37").setMessage("Release 1.3.37").call()
 
-        git.prettyLog()
         val result = sut.gitFacts()
 
         assertEquals("master", result.branch)

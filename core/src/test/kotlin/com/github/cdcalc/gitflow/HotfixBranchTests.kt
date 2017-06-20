@@ -24,8 +24,6 @@ class HotfixBranchTests {
 
         val result: GitFacts = sut.gitFacts()
 
-        git.prettyLog()
-
         println(result.semVer)
         assertEquals("1.0.1-rc.2", result.semVer.toString())
     }

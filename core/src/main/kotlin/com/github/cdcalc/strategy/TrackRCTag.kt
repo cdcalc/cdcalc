@@ -2,11 +2,13 @@ package com.github.cdcalc.strategy
 
 import com.github.cdcalc.CalculateConfiguration
 import com.github.cdcalc.Tag
+import com.github.cdcalc.bumpMinor
 import com.github.cdcalc.data.CommitTag
 import com.github.cdcalc.data.SemVer
 import com.github.cdcalc.git.taggedCommits
 import com.github.cdcalc.git.highestMergedTag
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.AbbreviatedObjectId
 import org.eclipse.jgit.lib.Constants
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.revwalk.RevWalkUtils
@@ -38,14 +40,15 @@ fun trackRCTag(): (Git, CalculateConfiguration) -> SemVer {
 
         val baseTag = Tag(commitTag.tagName)
 
-        val bumpedTag = baseTag.copy(minor = baseTag.minor + 1, patch = 0)
+        val bumpedTag = baseTag.bumpMinor()
 
-        if (branch.branch == "develop") {
-            SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("beta", aheadCount.toString()))
-        } else {
-            // TODO: this is a naive extraction of merge request id
-            val version = branch.branch.replace("merge-requests/", "")
-            SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("alpha", version))
+        when {
+            branch.branch == "develop"
+                -> SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("beta", aheadCount.toString()))
+            branch.branch.contains("merge-requests/", true)
+                -> SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("alpha", branch.branch.replace("merge-requests/", "")))
+            else
+                -> SemVer(bumpedTag.major, bumpedTag.minor, bumpedTag.patch, listOf("alpha", head.abbreviate(7).name().toUpperCase()))
         }
     }
 }
