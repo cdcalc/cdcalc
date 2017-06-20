@@ -21,7 +21,6 @@ class ReleaseBranchTests {
         git.checkout("release/2.0.0", true)
                 .createCommit().createCommit()
 
-        git.prettyLog()
         val result = sut.gitFacts()
 
         assertEquals("2.0.0-rc.2", result.semVer.toString())

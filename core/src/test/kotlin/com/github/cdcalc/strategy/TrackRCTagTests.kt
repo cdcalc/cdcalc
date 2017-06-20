@@ -24,7 +24,6 @@ class TrackRCTagTests {
         git.createCommit()
         git.createCommit()
 
-        git.prettyLog()
         val result: SemVer = sut(git, CalculateConfiguration("develop", 1337))
 
         assertEquals("1.3.0-beta.2", result.toString())

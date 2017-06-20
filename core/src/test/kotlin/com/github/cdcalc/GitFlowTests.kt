@@ -88,8 +88,6 @@ class GitFlowTests {
         git.branchDelete().setBranchNames("release/2.0.0").call()
         git.checkout("develop")
 
-        git.prettyLog()
-
         val result = sut.gitFacts()
 
         // TODO: the beta increment is a build counter for develop and must be passed from the outside
@@ -120,7 +118,6 @@ class GitFlowTests {
 
         val calculateDivergence = git.calculateDivergence(develop, master)
         println(calculateDivergence)
-        git.prettyLog()
     }
 
     @Suppress("UNUSED_VARIABLE")
