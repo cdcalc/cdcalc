@@ -1,6 +1,7 @@
 package com.github.cdcalc.gitflow
 
 import com.github.cdcalc.*
+import com.github.cdcalc.data.SemVer
 import org.eclipse.jgit.api.Git
 import org.junit.Before
 import org.junit.Test
@@ -23,10 +24,8 @@ class MasterBranchTests {
         val result = sut.gitFacts()
 
         assertEquals("master", result.branch)
-        assertEquals(Tag(1, 0, 0), result.tag)
-        assertEquals(0, result.ahead)
+        assertEquals(SemVer(1,0,0), result.semVer)
     }
-
 
     @Test
     fun should_resolve_master_branch_new_version() {
@@ -37,8 +36,6 @@ class MasterBranchTests {
         val result = sut.gitFacts()
 
         assertEquals("master", result.branch)
-        assertEquals(Tag(1, 3, 37), result.tag)
-        assertEquals(0, result.ahead)
+        assertEquals(SemVer(1,3,37), result.semVer)
     }
-
 }

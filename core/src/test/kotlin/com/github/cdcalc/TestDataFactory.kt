@@ -7,6 +7,7 @@ import java.io.File
 import java.io.InputStreamReader
 import java.util.*
 
+@Suppress("unused")
 fun Git.prettyLog() {
     val process = ProcessBuilder().directory(this.repository.directory).command("git", "lg").start()
 

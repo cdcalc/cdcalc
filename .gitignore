@@ -1,7 +1,5 @@
 .gradle
 .idea
-build
-repo
-classes
-gradle.properties
 .gradletasknamecache
+build
+gradle.properties
