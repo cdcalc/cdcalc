@@ -23,8 +23,6 @@ class HotfixBranchTests {
                 .createCommit().createCommit()
 
         val result: GitFacts = sut.gitFacts()
-
-        println(result.semVer)
         assertEquals("1.0.1-rc.2", result.semVer.toString())
     }
 

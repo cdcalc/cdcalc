@@ -1,5 +1,8 @@
 package com.github.cdcalc
 
+import com.github.cdcalc.data.SemVer
+import com.github.cdcalc.git.RefSemVer
+import com.github.cdcalc.git.semVerTags
 import org.eclipse.jgit.api.Git
 
 class CutReleaseBranch(val git: Git) {
@@ -8,11 +11,13 @@ class CutReleaseBranch(val git: Git) {
             throw InvalidBranchException(requiredBranch, git.repository.branch)
         }
 
-        val latestTag = git.tagList().call()
-                .map { Tag(it.name) }
-                .plus(Tag.Empty)
+        val latestTag = git.semVerTags()
+                .map { it.semVer }
+                .plus(SemVer.Empty)
                 .sortedDescending()
-                .first()
+                .first() {
+                    it.identifiers == listOf("rc", "0") || it.isStable()
+                }
 
         val bumpedVersion = latestTag.bump()
         val releaseBranch = "release/${bumpedVersion.major}.${bumpedVersion.minor}.${bumpedVersion.patch}"

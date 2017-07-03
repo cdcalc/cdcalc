@@ -26,8 +26,18 @@ class AnyBranchTests {
         val result: GitFacts = sut.gitFacts()
 
         val head = git.repository.resolve(Constants.HEAD)
-
-        assertEquals(SemVer(2,1,0, listOf("alpha", head.abbreviate(7).name().toUpperCase())), result.semVer)
+        assertEquals(SemVer(1,1,0, listOf("alpha", head.abbreviate(7).name().toUpperCase())), result.semVer)
     }
 
+    @Test
+    fun should_track_rc_behind_commit() {
+        git.createTaggedCommit("v2.0.0-rc.0")
+        git.checkout("foobar", true)
+        git.createCommit()
+
+        val result: GitFacts = sut.gitFacts()
+
+        val head = git.repository.resolve(Constants.HEAD)
+        assertEquals(SemVer(2,1,0, listOf("alpha", head.abbreviate(7).name().toUpperCase())), result.semVer)
+    }
 }

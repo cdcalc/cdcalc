@@ -1,5 +1,6 @@
 package com.github.cdcalc
 
+import com.github.cdcalc.data.SemVer
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.MergeCommand
 import org.eclipse.jgit.lib.Ref
@@ -26,8 +27,6 @@ class GitFlowTests {
         val result = sut.gitFacts()
 
         assertEquals("master", result.branch)
-        assertEquals(Tag(1,0,0), result.tag)
-        assertEquals(0, result.ahead)
     }
 
     @Test fun should_resovle_closest_reachable_tag() {
@@ -35,7 +34,8 @@ class GitFlowTests {
 
         val result = sut.gitFacts()
 
-        assertEquals(Tag(1, 0, 0), result.tag)
+        assertEquals(SemVer(1,0,0), result.semVer)
+
     }
 
     @Test fun should_find_the_current_tag() {
@@ -44,7 +44,7 @@ class GitFlowTests {
 
         val result = sut.gitFacts()
 
-        assertEquals(Tag(1, 0, 1), result.tag)
+        assertEquals(SemVer(1,0,1), result.semVer)
     }
 
     /* Release branch tests */
@@ -53,7 +53,7 @@ class GitFlowTests {
 
         val result = sut.gitFacts()
 
-        assertEquals(Tag(2,0,0), result.tag)
+        assertEquals(SemVer(2,0,0, listOf("rc", "0")), result.semVer)
     }
 
     /* Feature from release branch */
@@ -62,7 +62,8 @@ class GitFlowTests {
 
         val result = sut.gitFacts()
 
-        assertEquals(Tag(2,0,0), result.tag)
+        assertEquals(SemVer(2,0,0, listOf("rc", "0")), result.semVer)
+
     }
 
     /* Feature from release branch */
@@ -90,8 +91,7 @@ class GitFlowTests {
 
         val result = sut.gitFacts()
 
-        // TODO: the beta increment is a build counter for develop and must be passed from the outside
-        assertEquals("2.1.0-beta.4", result.semVer.toString())
+        assertEquals("2.1.0-beta.1", result.semVer.toString())
     }
 
 
