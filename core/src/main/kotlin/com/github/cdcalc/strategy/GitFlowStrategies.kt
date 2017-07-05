@@ -42,14 +42,20 @@ fun versionForDevelopBranch(): (Git, CalculateConfiguration) -> SemVer {
     return { git, _ ->
         val tags = git.semVerTags()
             .filterTagsDescending { versionFromTag ->
-                versionFromTag.identifiers == listOf("rc", "0") || versionFromTag.isStable()
+                versionFromTag.identifiers == listOf("rc", "0")
             }
 
         val (semVer, ahead) = git.aheadOfTag(tags, true)
 
+        if (semVer == SemVer.Empty || ahead == 0) {
+            throw TrackingException("Couldn't find any reachable rc.0 tags before current commit")
+        }
+
         semVer.bump().copy(identifiers = listOf("beta", (ahead - 1).toString()))
     }
 }
+
+class TrackingException(message: String) : Throwable(message)
 
 fun versionForMasterBranch(): (Git, CalculateConfiguration) -> SemVer {
     return { git, _ ->
