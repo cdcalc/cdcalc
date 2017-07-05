@@ -57,4 +57,43 @@ class DevelopBranchTests {
         val result: SemVer = sut.gitFacts().semVer
         assertEquals("1.3.0-beta.1", result.toString())
     }
+
+    @Test
+    fun should_treat_merge_commit_as_one() {
+        git.createTaggedCommit("v1.2.3-rc.0")
+
+        git.checkout("new-feature", true)
+        git.createCommit()
+        git.createCommit()
+
+        git.checkout("develop")
+        git.merge("new-feature")
+
+        git.prettyLog()
+        val result: SemVer = sut.gitFacts().semVer
+        assertEquals("1.3.0-beta.0", result.toString())
+    }
+
+    @Test
+    fun should_handle_reintegrated_develop() {
+        git.createTaggedCommit("v1.2.3-rc.0")
+
+        git.checkout("new-feature", true)
+        git.createCommit()
+        git.createCommit()
+
+        git.checkout("develop")
+        git.createCommit()
+
+        git.checkout("new-feature")
+        git.merge("develop")
+
+        git.checkout("develop")
+        git.merge("new-feature")
+
+        git.prettyLog()
+        val result: SemVer = sut.gitFacts().semVer
+        assertEquals("1.3.0-beta.1", result.toString())
+    }
+
 }
