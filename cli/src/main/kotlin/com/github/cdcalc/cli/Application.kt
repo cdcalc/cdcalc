@@ -1,5 +1,6 @@
-package com.github.cdcalc
+package com.github.cdcalc.cli
 
+import com.github.cdcalc.Calculate
 import org.eclipse.jgit.api.Git
 import java.io.File
 
