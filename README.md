@@ -9,6 +9,16 @@ At the moment there's only a gradle plugin but the core project should be self c
 ### Gradle plugin
 The easiest way to use it, is the gradle plugin https://plugins.gradle.org/plugin/com.github.cdcalc see the `sample` folder for more information.
 
+### CLI
+The CLI is experimental but can be used for debugging at the moment.
+
+```
+./gradlew installDist
+./cli/build/install/cli/bin/cli
+```
+
+The `cli` or `cli.bat` to can be executed from any folder containing a `.git` folder
+
 ## CI
 [![Build Status](https://travis-ci.org/cdcalc/cdcalc.svg?branch=master)](https://travis-ci.org/cdcalc/cdcalc)
 [![codecov](https://codecov.io/gh/cdcalc/cdcalc/branch/master/graph/badge.svg)](https://codecov.io/gh/cdcalc/cdcalc)
