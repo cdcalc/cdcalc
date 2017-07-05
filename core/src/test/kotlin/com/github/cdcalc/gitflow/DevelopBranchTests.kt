@@ -2,6 +2,7 @@ package com.github.cdcalc.gitflow
 
 import com.github.cdcalc.*
 import com.github.cdcalc.data.SemVer
+import com.github.cdcalc.strategy.TrackingException
 import org.eclipse.jgit.api.Git
 import org.junit.Before
 import org.junit.Test
@@ -17,14 +18,12 @@ class DevelopBranchTests {
         sut = Calculate(git)
     }
 
-    @Test
+    @Test(expected = TrackingException::class)
     fun should_resolve_master_branch() {
-        val result: GitFacts = sut.gitFacts()
-
-        assertEquals(SemVer(1,1,0, listOf("beta", "0")), result.semVer)
+        sut.gitFacts()
     }
 
-    @Test
+    @Test(expected = TrackingException::class)
     fun should_stay_on_same_version_independent_on_tag() {
         git.tag().let {
             it.name = "v1.1.0-rc.0"
@@ -32,9 +31,7 @@ class DevelopBranchTests {
             it.call()
         }
 
-        val result: GitFacts = sut.gitFacts()
-
-        assertEquals(SemVer(1,1,0, listOf("beta", "0")), result.semVer)
+        sut.gitFacts()
     }
 
     @Test
