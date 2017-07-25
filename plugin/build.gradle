@@ -9,6 +9,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.1"
+}
+
 dependencies {
     compile gradleApi()
 }
@@ -16,12 +20,18 @@ dependencies {
 apply plugin: 'maven-publish'
 apply plugin: "com.gradle.plugin-publish"
 
+shadowJar {
+    classifier = null
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        /*mavenJava(MavenPublication) {
             artifactId 'cdcalc-gradle'
             from components.java
+        }*/
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
         }
     }
 
