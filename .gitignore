@@ -4,3 +4,4 @@
 .gradletasknamecache
 build
 gradle.properties
+out/
