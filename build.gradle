@@ -22,7 +22,7 @@ buildscript {
 
 allprojects {
     group = 'com.github.cdcalc'
-    version = '0.0.9-SNAPSHOT'
+    version = '0.0.9'
 }
 
 subprojects {
@@ -35,8 +35,6 @@ subprojects {
             coroutines 'enable'
         }
     }
-
-    version = '0.0.9-SNAPSHOT'
 
     repositories {
         jcenter()
