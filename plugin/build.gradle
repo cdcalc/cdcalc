@@ -1,21 +1,13 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "com.gradle.publish:plugin-publish-plugin:0.9.9"
-    }
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '0.9.9'
 }
 
 dependencies {
     compile gradleApi()
+    testCompile gradleTestKit()
 }
-
-apply plugin: 'maven-publish'
-apply plugin: "com.gradle.plugin-publish"
-
 
 publishing {
     publications {
