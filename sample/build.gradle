@@ -16,12 +16,9 @@ cdcalc {
 
 task publish(dependsOn: 'calculateVersion', description: 'Publish artifacts to Nexus', group: 'Publishing') {
     doLast {
-        println("Version from calculateVersion $cdcalc.calculatedVersion")
-        project.version = cdcalc.calculatedVersion
+        println("Version from calculateVersion: $calculateVersion.version and branch: $calculateVersion.branch")
+        project.version = calculateVersion.version
         println("Version $version")
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "4.0"
-}
