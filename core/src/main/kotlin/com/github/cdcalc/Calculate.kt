@@ -4,14 +4,12 @@ import com.github.cdcalc.configuration.EnvironmentConfiguration
 import com.github.cdcalc.configuration.resolveEnvironmentConfiguration
 import com.github.cdcalc.data.SemVer
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.lib.Constants
-
-
+import java.io.File
 
 
 class Calculate(
         val git: Git,
-        @Suppress("unused") val calculateConfiguration: CalculateSetting = CalculateSetting(),
+        private val calculateSettings: CalculateSettings = CalculateSettings(),
         private val resolveEnvironmentConfiguration: (Git) -> EnvironmentConfiguration = resolveEnvironmentConfiguration()
 ) {
     fun gitFacts(): GitFacts {
@@ -20,12 +18,11 @@ class Calculate(
         println("Resolved branch $branch running in the context of $buildEnvironment")
 
         val semVer: SemVer = (com.github.cdcalc.strategy.findBranchStrategy(branch))(git, CalculateConfiguration(branch))
-        val resolve = git.repository.resolve(Constants.HEAD)
 
-        val mapOf = mapOf(Pair("sha", resolve.name))
-        val gitFacts = GitFacts(branch, 0, semVer, mapOf)
+        val gitFacts = GitFacts(branch = branch, semVer = semVer)
 
         sendBuildNumberToCI(gitFacts)
+        writeVersionToFile(calculateSettings, gitFacts)
 
         return gitFacts
     }
@@ -36,5 +33,11 @@ class Calculate(
     }
 }
 
-data class CalculateSetting(val trackOrigin: String = "")
+internal fun writeVersionToFile(calculateSettings: CalculateSettings, gitFacts: GitFacts) {
+    if (calculateSettings.versionFile != null) {
+        calculateSettings.versionFile.writeText(gitFacts.semVer.toString())
+    }
+}
+
+data class CalculateSettings(val versionFile: File? = null)
 

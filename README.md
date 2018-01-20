@@ -9,7 +9,16 @@ The goal is to provide a simple way to automatically calculate a Semantic Versio
 It's possible to use it via the gradle plugin or the cli, see section below!
 
 ### Gradle plugin
-The easiest way to use it, is the gradle plugin https://plugins.gradle.org/plugin/com.github.cdcalc see the `sample` folder for more information.
+The easiest way is to use the [gradle plugin](https://plugins.gradle.org/plugin/com.github.cdcalc), see the `sample` folder for more information.
+There are function tests for the plugin that explains the different configuration options.
+
+#### Write the calculated version to file
+
+```groovy
+cdcalc {
+  versionFile = file('.version')
+}
+```
 
 ### CLI
 The CLI is experimental but can be used for debugging at the moment.
