@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.cdcalc" version "0.0.9"
+    id "com.github.cdcalc" version "0.0.10"
 }
 
 version = '0.0.1-SNAPSHOT'
