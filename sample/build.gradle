@@ -11,7 +11,7 @@ plugins {
 version = '0.0.1-SNAPSHOT'
 
 cdcalc {
-    repository = '../.git'
+    repository = file('../.git')
 }
 
 task publish(dependsOn: 'calculateVersion', description: 'Publish artifacts to Nexus', group: 'Publishing') {
