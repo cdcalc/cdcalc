@@ -37,6 +37,17 @@ class EnvironmentConfigurationTest {
         assertEquals(EnvironmentConfiguration(BuildEnvironment.GitLab, "master"), configuration)
     }
 
+    @Test fun `Should resolve TeamCity configuration`() {
+        val resolveConfiguration = resolveEnvironmentConfiguration(
+                fakeEnvironment(mapOf(Pair("TEAMCITY_VERSION", "10")))
+        )
+        git.checkout("master")
+
+        val configuration = resolveConfiguration(git)
+
+        assertEquals(EnvironmentConfiguration(BuildEnvironment.TeamCity, "master"), configuration)
+    }
+
     fun fakeEnvironment(variables: Map<String, String>): (String) -> String? {
         return {
             variables[it]

@@ -69,7 +69,6 @@ class DevelopBranchTests {
         git.checkout("develop")
         git.merge("new-feature")
 
-        git.prettyLog()
         val result: SemVer = sut.gitFacts().semVer
         assertEquals("1.3.0-beta.0", result.toString())
     }
@@ -91,7 +90,6 @@ class DevelopBranchTests {
         git.checkout("develop")
         git.merge("new-feature")
 
-        git.prettyLog()
         val result: SemVer = sut.gitFacts().semVer
         assertEquals("1.3.0-beta.1", result.toString())
     }
@@ -140,8 +138,6 @@ class DevelopBranchTests {
         }
 
         git.checkout("develop").merge("hotfix/1.2.4")
-
-        git.prettyLog()
 
         val result: SemVer = sut.gitFacts().semVer
         assertEquals("1.3.0-beta.2", result.toString())

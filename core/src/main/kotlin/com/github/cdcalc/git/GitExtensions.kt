@@ -8,6 +8,8 @@ import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Ref
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevWalk
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 fun Git.taggedCommits(): Map<ObjectId, CommitTag> {
     val branchCommit: Map<ObjectId, CommitTag> = this.tagList().call().map {
@@ -54,6 +56,7 @@ fun <T> Git.processTags(tags: List<RefSemVer>, filter: (walk: RevWalk, headCommi
 }
 
 fun Git.aheadOfTag(tags: List<RefSemVer>, ignoreTagsOnHead: Boolean = false) : SemVerAhead {
+    val log: Logger = LoggerFactory.getLogger(::aheadOfTag.name)
     val semVerAhead = processTags(tags) { walk, headCommit, sequence ->
         sequence.filter { (taggedCommit) ->
             when {
@@ -61,7 +64,7 @@ fun Git.aheadOfTag(tags: List<RefSemVer>, ignoreTagsOnHead: Boolean = false) : S
                 else -> walk.isMergedInto(taggedCommit, headCommit)
             }
         }.map { (taggedCommit, semVer: SemVer) ->
-            println("Check if " + headCommit.name + " is merged into " + taggedCommit.name)
+                    log.info("Check if " + headCommit.name + " is merged into " + taggedCommit.name)
             SemVerAhead(
                     semVer,
                     walk.countCommits(headCommit, taggedCommit),
