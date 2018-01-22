@@ -94,7 +94,6 @@ class GitFlowTests {
         assertEquals("2.1.0-beta.1", result.semVer.toString())
     }
 
-
     @Test fun find_latest() {
         git.checkout("develop").createCommit().createCommit()
         git.checkout("feature/foo", true).createCommit().createCommit().createCommit()
@@ -115,29 +114,9 @@ class GitFlowTests {
             it.name == "refs/heads/master"
         }
 
-
         val calculateDivergence = git.calculateDivergence(develop, master)
-        println(calculateDivergence)
+        assertEquals(CommitCount(behind=1, ahead=7), calculateDivergence)
     }
-
-    @Suppress("UNUSED_VARIABLE")
-    @Test fun fetchSomeAuthorData() {
-
-        val revWalk = RevWalk(git.repository)
-        val parseCommit = revWalk.parseCommit(git.repository.findRef("master").objectId)
-
-
-        val authorIdent = parseCommit.getAuthorIdent();
-        val authorDate = authorIdent.getWhen();
-        val authorTimeZone = authorIdent.getTimeZone();
-
-        Instant.EPOCH
-        println(parseCommit.shortMessage)
-        println(parseCommit)
-        println(Instant.now().epochSecond)
-    }
-
-
 }
 
 fun Git.calculateDivergence(local: Ref, tracking: Ref): CommitCount {
@@ -161,7 +140,6 @@ fun Git.calculateDivergence(local: Ref, tracking: Ref): CommitCount {
         return CommitCount(behindCount, aheadCount)
     }
 }
-data class CommitCount(val behind: Int, val ahead: Int) {
 
-}
+data class CommitCount(val behind: Int, val ahead: Int)
 

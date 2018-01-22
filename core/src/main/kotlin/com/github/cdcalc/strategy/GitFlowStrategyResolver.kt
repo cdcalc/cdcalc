@@ -19,8 +19,6 @@ fun matches(searchString: String): (String) -> Boolean {
 }
 
 fun findBranchStrategy(branch: String): (org.eclipse.jgit.api.Git, com.github.cdcalc.CalculateConfiguration) -> SemVer {
-    println("Trying to find matching branch for: " + branch)
-
     val strategies = listOf(
             Pair(com.github.cdcalc.strategy.match("master"), versionForMasterBranch()),
             Pair(com.github.cdcalc.strategy.matches("hotfix/.*"), versionForHotfixBranch()),

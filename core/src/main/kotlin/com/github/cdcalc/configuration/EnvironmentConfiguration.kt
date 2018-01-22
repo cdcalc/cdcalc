@@ -15,6 +15,10 @@ private fun buildConfiguration(git: Git, environment: (String) -> String?) : Env
         return EnvironmentConfiguration(BuildEnvironment.GitLab, environment("CI_COMMIT_REF_NAME")!!)
     }
 
+    if (!environment("TEAMCITY_VERSION").isNullOrEmpty()) {
+        return EnvironmentConfiguration(BuildEnvironment.TeamCity, git.repository.branch)
+    }
+
     return EnvironmentConfiguration(BuildEnvironment.StandAlone, git.repository.branch)
 }
 

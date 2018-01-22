@@ -16,7 +16,8 @@ open class CalculateVersionTask : DefaultTask() {
     @TaskAction fun calculateVersion() {
         val config: CDCalcExtensions = project.extensions.findByType(CDCalcExtensions::class.java) ?: CDCalcExtensions()
         val git = Git.open(config.repository)
-        val gitFacts = Calculate(git, CalculateSettings(versionFile = config.versionFile)).gitFacts()
+        val gitFacts = Calculate(git, CalculateSettings(versionFile = config.versionFile))
+                .gitFacts(logger::lifecycle)
 
         addProperties(gitFacts)
     }
