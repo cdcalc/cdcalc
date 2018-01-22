@@ -5,13 +5,14 @@ buildscript {
 }
 
 plugins {
-    id "com.github.cdcalc" version "0.0.10"
+    id "com.github.cdcalc" version "0.0.12"
 }
 
 version = '0.0.1-SNAPSHOT'
 
 cdcalc {
     repository = file('../.git')
+    versionFile = file('.version')
 }
 
 task publish(dependsOn: 'calculateVersion', description: 'Publish artifacts to Nexus', group: 'Publishing') {
