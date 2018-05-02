@@ -20,10 +20,10 @@ publishing {
     repositories {
         maven {
             name "release"
-            url nexusUrl
+            url findProperty('nexusUrl')
             credentials {
-                username = nexusUsername
-                password = nexusPassword
+                username = findProperty('nexusUsername')
+                password = findProperty('nexusPassword')
             }
         }
     }
