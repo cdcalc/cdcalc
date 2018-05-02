@@ -1,7 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
-    id 'com.gradle.plugin-publish' version '0.9.9'
+    id 'com.gradle.plugin-publish' version '0.9.10'
 }
 
 dependencies {
@@ -20,10 +20,10 @@ publishing {
     repositories {
         maven {
             name "release"
-            url nexusUrl
+            url findProperty('nexusUrl')
             credentials {
-                username = nexusUsername
-                password = nexusPassword
+                username = findProperty('nexusUsername')
+                password = findProperty('nexusPassword')
             }
         }
     }

@@ -1,15 +1,6 @@
-if (!project.hasProperty("nexusUrl")) {
-    ext.nexusUrl = ""
-}
-if (!project.hasProperty("nexusUsername")) {
-    ext.nexusUsername = ""
-}
-if (!project.hasProperty("nexusPassword")) {
-    ext.nexusPassword = ""
-}
-
 buildscript {
-    ext.kotlin_version = '1.2.20'
+    ext.kotlin_version = '1.2.41'
+
     repositories {
         mavenCentral()
         jcenter()
@@ -42,7 +33,7 @@ subprojects {
     }
 
     dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
         testCompile 'junit:junit:4.12'
         testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     }
@@ -70,5 +61,5 @@ project(':cli') {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "4.4.1"
+    gradleVersion = "4.7.0"
 }
