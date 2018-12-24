@@ -1,7 +1,7 @@
 package com.github.cdcalc.data
 
-import org.junit.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class SemVerTest {
     @Test

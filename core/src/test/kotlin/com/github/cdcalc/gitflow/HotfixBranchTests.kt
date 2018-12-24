@@ -2,15 +2,15 @@ package com.github.cdcalc.gitflow;
 
 import com.github.cdcalc.*
 import org.eclipse.jgit.api.Git
-import org.junit.Before
-import org.junit.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class HotfixBranchTests {
     lateinit var sut: Calculate
     lateinit var git:Git
 
-    @Before
+    @BeforeEach
     fun before() {
         git = initGitFlow()
         sut = Calculate(git)

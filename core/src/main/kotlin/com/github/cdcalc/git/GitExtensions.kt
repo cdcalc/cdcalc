@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 
 fun Git.taggedCommits(): Map<ObjectId, CommitTag> {
     val branchCommit: Map<ObjectId, CommitTag> = this.tagList().call().map {
-        val peel = this.repository.peel(it)
+        val peel = this.repository.refDatabase.peel(it)
         if (peel.peeledObjectId != null) {
             CommitTag(peel.peeledObjectId, it.name)
         } else {
@@ -34,7 +34,7 @@ fun Git.semVerTags(): List<RefSemVer> {
 
 // https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/porcelain/ListTags.java
 fun Git.peeledObjectId(ref: Ref): ObjectId {
-    val peel = this.repository.peel(ref)
+    val peel = this.repository.refDatabase.peel(ref)
     val objectId = peel.peeledObjectId ?: ref.objectId
     return objectId
 }

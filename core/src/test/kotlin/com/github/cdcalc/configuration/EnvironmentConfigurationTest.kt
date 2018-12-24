@@ -3,19 +3,20 @@ package com.github.cdcalc.configuration
 import com.github.cdcalc.checkout
 import com.github.cdcalc.initGitFlow
 import org.eclipse.jgit.api.Git
-import org.junit.Before
-import org.junit.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class EnvironmentConfigurationTest {
     lateinit var git: Git
 
-    @Before
+    @BeforeEach
     fun before() {
         git = initGitFlow()
     }
 
-    @Test fun `Should resolve stand alone configuration`() {
+    @Test
+    fun `Should resolve stand alone configuration`() {
         val resolveConfiguration = resolveEnvironmentConfiguration(environment = { null })
         git.checkout("develop")
 

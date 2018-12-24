@@ -1,7 +1,5 @@
 package com.github.cdcalc.data
 
-import kotlin.coroutines.experimental.buildSequence
-
 data class SemVer(
         val major: Int = 0,
         val minor: Int = 0,
@@ -56,7 +54,7 @@ data class SemVer(
     }
 
     override fun compareTo(other: SemVer): Int {
-        val comparators = buildSequence {
+        val comparators = sequence {
             yield(major.compareTo(other.major))
             yield(minor.compareTo(other.minor))
             yield(patch.compareTo(other.patch))
