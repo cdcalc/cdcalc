@@ -5,10 +5,11 @@ buildscript {
 }
 
 plugins {
-    id "com.github.cdcalc" version "0.0.12"
+    id "com.github.cdcalc" version "0.0.13"
 }
 
 version = '0.0.1-SNAPSHOT'
+group = 'com.github.cdcalc'
 
 cdcalc {
     repository = file('../.git')
@@ -23,3 +24,6 @@ task publish(dependsOn: 'calculateVersion', description: 'Publish artifacts to N
     }
 }
 
+wrapper {
+    gradleVersion = "5.0"
+}

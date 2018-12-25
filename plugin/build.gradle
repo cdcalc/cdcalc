@@ -1,6 +1,6 @@
 plugins {
-    id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '0.10.0'
 }
 
@@ -9,22 +9,24 @@ dependencies {
     testCompile gradleTestKit()
 }
 
+jar {
+    baseName "com.github.cdcalc.gradle.plugin"
+}
+
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifactId 'cdcalc-gradle'
+        maven(MavenPublication) {
+            artifactId 'com.github.cdcalc.gradle.plugin'
             from components.java
         }
     }
+}
 
-    repositories {
-        maven {
-            name "release"
-            url findProperty('nexusUrl')
-            credentials {
-                username = findProperty('nexusUsername')
-                password = findProperty('nexusPassword')
-            }
+gradlePlugin {
+    plugins {
+        calculateSemVerPlugin {
+            id = 'com.github.cdcalc'
+            implementationClass = 'com.github.cdcalc.gradle.CalculateSemVerPlugin'
         }
     }
 }
@@ -37,7 +39,6 @@ pluginBundle {
 
     plugins {
         calculateSemVerPlugin {
-            id = 'com.github.cdcalc'
             displayName = 'Calculate SemVer Plugin'
         }
     }
