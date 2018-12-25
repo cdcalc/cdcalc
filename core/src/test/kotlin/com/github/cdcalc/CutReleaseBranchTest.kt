@@ -3,29 +3,31 @@ package com.github.cdcalc
 import com.github.cdcalc.git.taggedCommits
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class CutReleaseBranchTest {
     lateinit var sut: CutReleaseBranch
     lateinit var git: Git
 
-    @Before fun before() {
+    @BeforeEach
+    fun before() {
         git = initGitFlow()
         sut = CutReleaseBranch(git)
     }
 
-    @After fun after() {
+    @AfterEach fun after() {
         git.close()
     }
 
-    @Test(expected = InvalidBranchException::class)
+    @Test()
     fun shouldThrowIfTryingToCreateReleaseBranchFromDevelop() {
         git.checkout("master")
 
-        sut.cutReleaseBranch()
+        assertThrows<InvalidBranchException> { sut.cutReleaseBranch() }
     }
 
     @Test fun shouldBeAbleToCutReleaseBranch() {

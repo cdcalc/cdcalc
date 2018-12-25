@@ -7,21 +7,21 @@ import org.eclipse.jgit.lib.Ref
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.revwalk.RevWalkUtils
 import org.eclipse.jgit.revwalk.filter.RevFilter
-import org.junit.Before
-import org.junit.Test
-import java.time.Instant
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class GitFlowTests {
     lateinit var sut: Calculate
     lateinit var git: Git
 
-    @Before fun before() {
+    @BeforeEach fun before() {
         git = initGitFlow()
         sut = Calculate(git)
     }
 
-    @Test fun should_resolve_master_branch() {
+    @Test
+    fun should_resolve_master_branch() {
         git.checkout("master")
 
         val result = sut.gitFacts()

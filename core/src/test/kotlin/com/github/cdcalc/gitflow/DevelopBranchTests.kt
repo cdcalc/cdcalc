@@ -4,26 +4,29 @@ import com.github.cdcalc.*
 import com.github.cdcalc.data.SemVer
 import com.github.cdcalc.strategy.TrackingException
 import org.eclipse.jgit.api.Git
-import org.junit.Before
-import org.junit.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class DevelopBranchTests {
     lateinit var sut: Calculate
     lateinit var git: Git
 
-    @Before
+    @BeforeEach
     fun before() {
         git = initGitFlow()
         sut = Calculate(git)
     }
 
-    @Test(expected = TrackingException::class)
+    @Test
     fun should_resolve_master_branch() {
-        sut.gitFacts()
+        assertThrows<TrackingException> {
+            sut.gitFacts()
+        }
     }
 
-    @Test(expected = TrackingException::class)
+    @Test
     fun should_stay_on_same_version_independent_on_tag() {
         git.tag().let {
             it.name = "v1.1.0-rc.0"
@@ -31,7 +34,9 @@ class DevelopBranchTests {
             it.call()
         }
 
-        sut.gitFacts()
+        assertThrows<TrackingException> {
+            sut.gitFacts()
+        }
     }
 
     @Test

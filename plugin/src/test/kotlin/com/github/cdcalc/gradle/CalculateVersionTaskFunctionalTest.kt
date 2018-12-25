@@ -5,17 +5,25 @@ import org.eclipse.jgit.lib.PersonIdent
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import org.junit.Assert.assertEquals
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.support.io.TempDirectory
 import java.io.File
-import kotlin.test.assertTrue
+import java.nio.file.Path
 
+@ExtendWith(TempDirectory::class)
 class CalculateVersionTaskFunctionalTest {
-    @Rule @JvmField val testProjectDir = TemporaryFolder()
+    @BeforeEach
+    fun beforeEach(@TempDirectory.TempDir tempDirectory: Path) {
+        testProjectDir = tempDirectory
+    }
+    private lateinit var testProjectDir: Path
 
-    @Test fun `Should add an extra property for version at calculateVersion`() {
+    @Test
+    fun `Should add an extra property for version at calculateVersion`() {
         val buildFile = testProjectDir.newFile("build.gradle")
 
         val content = """
@@ -31,11 +39,11 @@ class CalculateVersionTaskFunctionalTest {
         """.trimIndent()
         buildFile.writeText(content)
 
-        gitInit(testProjectDir.root)
+        gitInit(testProjectDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.root, "printVersion")
+        val result = runGradle(testProjectDir.toFile(), "printVersion")
 
         val task = result.task(":printVersion")!!
         assertEquals(task.outcome, SUCCESS)
@@ -58,11 +66,11 @@ class CalculateVersionTaskFunctionalTest {
         """.trimIndent()
         buildFile.writeText(content)
 
-        gitInit(testProjectDir.root)
+        gitInit(testProjectDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.root, "printBranch")
+        val result = runGradle(testProjectDir.toFile(), "printBranch")
 
         val task = result.task(":printBranch")!!
         assertEquals(task.outcome, SUCCESS)
@@ -90,7 +98,7 @@ class CalculateVersionTaskFunctionalTest {
         """.trimIndent()
         buildFile.writeText(content)
 
-        gitInit(testProjectDir.root)
+        gitInit(testProjectDir.toFile())
                 .commit("Initial commit")
                 .tag("v4.1.7")
 
@@ -115,13 +123,13 @@ class CalculateVersionTaskFunctionalTest {
         """.trimIndent()
         buildFile.writeText(content)
 
-        gitInit(testProjectDir.root)
+        gitInit(testProjectDir.toFile())
                 .commit("Initial commit")
                 .tag("3.12.1")
 
-        runGradle(testProjectDir.root, "calculateVersion")
+        runGradle(testProjectDir.toFile(), "calculateVersion")
 
-        val file = File(testProjectDir.root, ".version")
+        val file = File(testProjectDir.toFile(), ".version")
         assertEquals("3.12.1", file.readText())
     }
 
@@ -155,4 +163,14 @@ class CalculateVersionTaskFunctionalTest {
         commit.call()
         return this
     }
+}
+
+private fun Path.newFile(name: String): File {
+    return this.resolve(name).toFile()
+}
+
+private fun Path.newFolder(name: String): File {
+    val folder = this.newFile(name)
+    folder.mkdirs()
+    return folder
 }
