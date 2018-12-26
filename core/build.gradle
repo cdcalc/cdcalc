@@ -9,14 +9,6 @@ dependencies {
 
 apply plugin: 'maven-publish'
 
-jar {
-    manifest {
-        attributes(
-                'Implementation-Version': project.version
-        )
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: project.classes) {
     classifier = 'sources'
     from sourceSets.main.allSource

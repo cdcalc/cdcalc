@@ -7,6 +7,7 @@ import org.eclipse.jgit.api.Git
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
+import org.gradle.jvm.tasks.Jar
 
 open class CalculateVersionTask : DefaultTask() {
     init {
@@ -23,6 +24,16 @@ open class CalculateVersionTask : DefaultTask() {
                 .gitFacts(logger::lifecycle)
 
         addProperties(gitFacts)
+
+        // Auto configure
+        project.allprojects.forEach {
+            it.version = gitFacts.semVer.toString()
+
+            // https://discuss.gradle.org/t/how-to-override-jar-tasks-manifest-inside-a-custom-plugin/7029/5
+            it.tasks.withType(Jar::class.java) { jar ->
+                jar.manifest.attributes[java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION.toString()] = gitFacts.semVer.toString()
+            }
+        }
 
         project.version = gitFacts.semVer.toString()
     }
