@@ -5,22 +5,27 @@ buildscript {
 }
 
 plugins {
-    id "com.github.cdcalc" version "0.0.13"
+    id "com.github.cdcalc" version "0.0.16"
 }
 
-version = '0.0.1-SNAPSHOT'
 group = 'com.github.cdcalc'
 
 cdcalc {
+    // Specify alternative location of git root
     repository = file('../.git')
+    // Write the version calculated to a file
     versionFile = file('.version')
 }
 
-task publish(dependsOn: 'calculateVersion', description: 'Publish artifacts to Nexus', group: 'Publishing') {
-    doLast {
+tasks.register("fakePublish").configure { task ->
+    task.dependsOn(calculateVersion)
+
+    task.doLast {
+        // Extra properties are added to calculateVersion after execution
         println("Version from calculateVersion: $calculateVersion.version and branch: $calculateVersion.branch")
-        project.version = calculateVersion.version
-        println("Version $version")
+
+        // At the moment calculateVersion sets the project version for all projects
+        println("Project version $task.project.version")
     }
 }
 
