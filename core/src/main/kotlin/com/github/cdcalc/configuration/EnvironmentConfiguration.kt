@@ -2,7 +2,7 @@ package com.github.cdcalc.configuration
 
 import org.eclipse.jgit.api.Git
 
-data class EnvironmentConfiguration(val buildEnvironment: BuildEnvironment, val branch: String)
+data class EnvironmentConfiguration(val buildEnvironment: BuildEnvironment, val branch: String, val tag: String? = null)
 
 fun resolveEnvironmentConfiguration(environment: (String) -> String? = ::getEnvironmentVariable): (git : Git) -> EnvironmentConfiguration {
     return { git ->
@@ -12,7 +12,7 @@ fun resolveEnvironmentConfiguration(environment: (String) -> String? = ::getEnvi
 
 private fun buildConfiguration(git: Git, environment: (String) -> String?) : EnvironmentConfiguration {
     if ("true" == environment("TRAVIS")) {
-        return EnvironmentConfiguration(BuildEnvironment.Travis, environment("TRAVIS_BRANCH")!!)
+        return EnvironmentConfiguration(BuildEnvironment.Travis, environment("TRAVIS_BRANCH")!!, environment("TRAVIS_TAG"))
     }
 
     if ("true" == environment("GITLAB_CI")) {

@@ -9,7 +9,11 @@ data class SemVer(
     companion object {
         val Empty = SemVer()
         
-        fun parse(name: String): SemVer {
+        fun parse(name: String?): SemVer {
+            if (name == null) {
+                return Empty
+            }
+
             val toRegex = """v?(\d+)\.(\d+)\.(\d+)""".toRegex()
             val matchEntire = toRegex.find(name) ?: return Empty
 
@@ -35,6 +39,10 @@ data class SemVer(
 
     fun isStable(): Boolean {
         return identifiers.isEmpty()
+    }
+
+    fun isEmpty(): Boolean {
+        return this == SemVer.Empty
     }
 
     fun bumpMinor(): SemVer {
