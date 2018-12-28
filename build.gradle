@@ -17,7 +17,6 @@ plugins {
 
 allprojects {
     group = 'com.github.cdcalc'
-    version = '0.0.16'
 }
 
 subprojects {
