@@ -11,6 +11,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.cdcalc" version "0.0.16"
+}
+
 allprojects {
     group = 'com.github.cdcalc'
     version = '0.0.16'
@@ -52,6 +56,30 @@ subprojects {
     }
 
     check.dependsOn jacocoTestReport
+}
+
+TaskProvider<Task> releaseSetup = tasks.register('releaseSetup')
+releaseSetup.configure {
+    it.dependsOn('calculateVersion')
+}
+
+TaskProvider<Task> releaseBuild = tasks.register('releaseBuild')
+releaseBuild.configure {
+    it.dependsOn(releaseSetup)
+    it.mustRunAfter(releaseSetup)
+    it.dependsOn(':core:build', ':plugin:build', ':cli:build')
+}
+
+TaskProvider<Task> releasePublish = tasks.register('releasePublish')
+releasePublish.configure {
+    it.dependsOn(releaseBuild)
+    it.dependsOn(':core:bintrayUpload', ':plugin:publishPlugins')
+    it.mustRunAfter(releaseBuild)
+}
+
+TaskProvider<Task> release = tasks.register('release')
+release.configure {
+    it.dependsOn(releasePublish)
 }
 
 project(':plugin') {
