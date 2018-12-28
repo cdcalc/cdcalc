@@ -11,6 +11,10 @@ fun resolveEnvironmentConfiguration(environment: (String) -> String? = ::getEnvi
 }
 
 private fun buildConfiguration(git: Git, environment: (String) -> String?) : EnvironmentConfiguration {
+    if ("true" == environment("TRAVIS")) {
+        return EnvironmentConfiguration(BuildEnvironment.Travis, environment("TRAVIS_BRANCH")!!)
+    }
+
     if ("true" == environment("GITLAB_CI")) {
         return EnvironmentConfiguration(BuildEnvironment.GitLab, environment("CI_COMMIT_REF_NAME")!!)
     }

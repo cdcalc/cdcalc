@@ -25,6 +25,19 @@ class EnvironmentConfigurationTest {
         assertEquals(EnvironmentConfiguration(BuildEnvironment.StandAlone, "develop"), configuration)
     }
 
+    @Test fun `Should resolve Travis configuration`() {
+        val resolveConfiguration = resolveEnvironmentConfiguration(
+                fakeEnvironment(mapOf(Pair("TRAVIS", "true"), Pair("TRAVIS_BRANCH", "master")))
+        )
+
+        val master = git.repository.resolve("master")
+        git.checkout().setName(master.name).call()
+
+        val configuration = resolveConfiguration(git)
+
+        assertEquals(EnvironmentConfiguration(BuildEnvironment.Travis, "master"), configuration)
+    }
+
     @Test fun `Should resolve GitLab configuration`() {
         val resolveConfiguration = resolveEnvironmentConfiguration(
                 fakeEnvironment(mapOf(Pair("GITLAB_CI", "true"), Pair("CI_COMMIT_REF_NAME", "master")))
