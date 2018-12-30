@@ -15,7 +15,7 @@ class MergeRequestTestes {
     @BeforeEach
     fun before() {
         git = initGitFlow()
-        sut = Calculate(git)
+        sut = Calculate(git, CalculateSettings(), ::standAloneTestConfiguration)
     }
 
     @Test
@@ -57,7 +57,7 @@ class ReleaseBranchTests {
     @BeforeEach
     fun before() {
         git = initGitFlow()
-        sut = Calculate(git)
+        sut = Calculate(git, CalculateSettings(), ::standAloneTestConfiguration)
     }
 
     @Test fun should_create_rc_0_when_branched_from_develop() {

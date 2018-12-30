@@ -1,6 +1,6 @@
 package com.github.cdcalc.strategy
 
-import com.github.cdcalc.CalculateConfiguration
+import com.github.cdcalc.configuration.EnvironmentConfiguration
 import com.github.cdcalc.data.SemVer
 import com.github.cdcalc.git.RefSemVer
 import com.github.cdcalc.git.aheadOfTag
@@ -8,7 +8,7 @@ import com.github.cdcalc.git.processTags
 import com.github.cdcalc.git.semVerTags
 import org.eclipse.jgit.api.Git
 
-fun versionForHotfixBranch(): (Git, CalculateConfiguration) -> SemVer {
+fun versionForHotfixBranch(): (Git, EnvironmentConfiguration) -> SemVer {
     return { git, branch ->
         val semVer = SemVer.parse(branch.branch)
 
@@ -23,7 +23,7 @@ fun versionForHotfixBranch(): (Git, CalculateConfiguration) -> SemVer {
     }
 }
 
-fun versionForReleaseBranch(): (Git, CalculateConfiguration) -> SemVer {
+fun versionForReleaseBranch(): (Git, EnvironmentConfiguration) -> SemVer {
     return { git, branch ->
         val semVer = SemVer.parse(branch.branch)
 
@@ -38,7 +38,7 @@ fun versionForReleaseBranch(): (Git, CalculateConfiguration) -> SemVer {
     }
 }
 
-fun versionForDevelopBranch(): (Git, CalculateConfiguration) -> SemVer {
+fun versionForDevelopBranch(): (Git, EnvironmentConfiguration) -> SemVer {
     return { git, _ ->
         val tags = git.semVerTags()
             .filterTagsDescending { versionFromTag ->
@@ -57,7 +57,7 @@ fun versionForDevelopBranch(): (Git, CalculateConfiguration) -> SemVer {
 
 class TrackingException(message: String) : Throwable(message)
 
-fun versionForMasterBranch(): (Git, CalculateConfiguration) -> SemVer {
+fun versionForMasterBranch(): (Git, EnvironmentConfiguration) -> SemVer {
     return { git, _ ->
         val tags = git.semVerTags()
             .filterTagsDescending({ it.isStable() })
@@ -68,7 +68,13 @@ fun versionForMasterBranch(): (Git, CalculateConfiguration) -> SemVer {
     }
 }
 
-fun versionForAnyBranch(): (Git, CalculateConfiguration) -> SemVer {
+fun directTag(): (Git, EnvironmentConfiguration) -> SemVer {
+    return { _, config ->
+        SemVer.parse(config.tag)
+    }
+}
+
+fun versionForAnyBranch(): (Git, EnvironmentConfiguration) -> SemVer {
     return { git, _ ->
         val tags = git.semVerTags()
             .filterTagsDescending({ versionFromTag ->

@@ -18,26 +18,26 @@ import java.nio.file.Path
 class CalculateVersionTaskFunctionalTest {
     @BeforeEach
     fun beforeEach(@TempDirectory.TempDir tempDirectory: Path) {
-        testProjectDir = tempDirectory
+        testDir = tempDirectory
     }
-    private lateinit var testProjectDir: Path
+
+    private lateinit var testDir: Path
 
     @Test
     fun `Should output version`() {
-        val buildFile = testProjectDir.newFile("build.gradle")
+        testDir.createFile("build.gradle") {
+            """
+                plugins {
+                    id "com.github.cdcalc"
+                }
+            """
+        }
 
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
-
-        gitInit(testProjectDir.toFile())
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.toFile(), "calculateVersion")
+        val result = runGradle(testDir.toFile(), "calculateVersion")
 
         val task = result.task(":calculateVersion")!!
         assertEquals(task.outcome, SUCCESS)
@@ -46,26 +46,25 @@ class CalculateVersionTaskFunctionalTest {
 
     @Test
     fun `Should set the project version`() {
-        val buildFile = testProjectDir.newFile("build.gradle")
-
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
-
-            task printVersion(dependsOn: 'calculateVersion') {
-                doLast {
-                    println "assertVersion[${'$'}project.version]"
+        testDir.createFile("build.gradle") {
+            """
+                plugins {
+                  id "com.github.cdcalc"
                 }
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
 
-        gitInit(testProjectDir.toFile())
+                task printVersion(dependsOn: 'calculateVersion') {
+                    doLast {
+                        println "assertVersion[${'$'}project.version]"
+                    }
+                }
+            """
+        }
+
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.toFile(), "printVersion")
+        val result = runGradle(testDir.toFile(), "printVersion")
 
         val task = result.task(":printVersion")!!
         assertEquals(task.outcome, SUCCESS)
@@ -74,81 +73,80 @@ class CalculateVersionTaskFunctionalTest {
 
     @Test
     fun `Should add an extra property for version at calculateVersion`() {
-        val buildFile = testProjectDir.newFile("build.gradle")
-
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
-
-            task printVersion(dependsOn: 'calculateVersion') {
-                doLast {
-                    println "assertVersion[${'$'}calculateVersion.version]"
+        testDir.createFile("build.gradle") {
+            """
+                plugins {
+                  id "com.github.cdcalc"
                 }
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
 
-        gitInit(testProjectDir.toFile())
+                task printVersion(dependsOn: 'calculateVersion') {
+                    doLast {
+                        println "assertVersion[${'$'}calculateVersion.version]"
+                    }
+                }
+            """
+        }
+
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.toFile(), "printVersion")
+        val result = runGradle(testDir.toFile(), "printVersion")
 
         val task = result.task(":printVersion")!!
         assertEquals(task.outcome, SUCCESS)
         assertContains("assertVersion[1.2.3]", result.output)
     }
 
-    @Test fun `Should add an extra property for branch at calculateVersion`() {
-        val buildFile = testProjectDir.newFile("build.gradle")
-
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
-
-            task printBranch(dependsOn: 'calculateVersion') {
-                doLast {
-                    println "assertBranch[${'$'}calculateVersion.branch]"
+    @Test
+    fun `Should add an extra property for branch at calculateVersion`() {
+        testDir.createFile("build.gradle") {
+            """
+                plugins {
+                  id "com.github.cdcalc"
                 }
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
 
-        gitInit(testProjectDir.toFile())
+                task printBranch(dependsOn: 'calculateVersion') {
+                    doLast {
+                        println "assertBranch[${'$'}calculateVersion.branch]"
+                    }
+                }
+            """
+        }
+
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("v1.2.3")
 
-        val result = runGradle(testProjectDir.toFile(), "printBranch")
+        val result = runGradle(testDir.toFile(), "printBranch")
 
         val task = result.task(":printBranch")!!
         assertEquals(task.outcome, SUCCESS)
         assertContains("assertBranch[master]", result.output)
     }
 
-    @Test fun `Should be possible to specify the git repository`() {
-        val buildFolder = testProjectDir.newFolder("subdir")
-        val buildFile = testProjectDir.newFile("subdir/build.gradle")
-
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
-
-            cdcalc {
-                repository = file('../.git')
-            }
-
-            task printVersion(dependsOn: 'calculateVersion') {
-                doLast {
-                    println "assertVersion[${'$'}calculateVersion.version]"
+    @Test
+    fun `Should be possible to specify the git repository`() {
+        val buildFolder = testDir.newFolder("subdir")
+        testDir.createFile("subdir/build.gradle") {
+            """
+                plugins {
+                  id "com.github.cdcalc"
                 }
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
 
-        gitInit(testProjectDir.toFile())
+                cdcalc {
+                    repository = file('../.git')
+                }
+
+                task printVersion(dependsOn: 'calculateVersion') {
+                    doLast {
+                        println "assertVersion[${'$'}calculateVersion.version]"
+                    }
+                }
+            """
+        }
+
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("v4.1.7")
 
@@ -159,27 +157,27 @@ class CalculateVersionTaskFunctionalTest {
         assertContains("assertVersion[4.1.7]", result.output)
     }
 
-    @Test fun `Should be able to write the version to file`() {
-        val buildFile = testProjectDir.newFile("build.gradle")
+    @Test
+    fun `Should be able to write the version to file`() {
+        testDir.createFile("build.gradle") {
+            """
+                plugins {
+                  id "com.github.cdcalc"
+                }
 
-        val content = """
-            plugins {
-              id "com.github.cdcalc"
-            }
+                cdcalc {
+                    versionFile = file('.version')
+                }
+            """
+        }
 
-            cdcalc {
-                versionFile = file('.version')
-            }
-        """.trimIndent()
-        buildFile.writeText(content)
-
-        gitInit(testProjectDir.toFile())
+        gitInit(testDir.toFile())
                 .commit("Initial commit")
                 .tag("3.12.1")
 
-        runGradle(testProjectDir.toFile(), "calculateVersion")
+        runGradle(testDir.toFile(), "calculateVersion")
 
-        val file = File(testProjectDir.toFile(), ".version")
+        val file = File(testDir.toFile(), ".version")
         assertEquals("3.12.1", file.readText())
     }
 
@@ -199,6 +197,7 @@ class CalculateVersionTaskFunctionalTest {
                 .build()
     }
 
+
     private fun gitInit(root: File): Git = Git.init().setDirectory(root).call()
 
     private fun Git.tag(tag: String): Git {
@@ -214,6 +213,12 @@ class CalculateVersionTaskFunctionalTest {
         commit.call()
         return this
     }
+}
+
+private fun Path.createFile(name: String, content: () -> String) {
+    val file = this.resolve(name).toFile()
+
+    file.writeText(content().trimIndent())
 }
 
 private fun Path.newFile(name: String): File {

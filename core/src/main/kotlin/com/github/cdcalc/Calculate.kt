@@ -18,23 +18,23 @@ class Calculate(
     private val log: Logger = LoggerFactory.getLogger(Calculate::class.java)
 
     fun gitFacts(printVersion: (String) -> Unit = log::info): GitFacts {
-        val (buildEnvironment, branch) = resolveEnvironmentConfiguration(git)
+        val environmentConfiguration = resolveEnvironmentConfiguration(git)
 
-        this.log.info("Resolved branch $branch running in the context of $buildEnvironment")
+        log.info("Resolved branch ${environmentConfiguration.branch} running in the context of ${environmentConfiguration.buildEnvironment}")
 
-        val semVer: SemVer = (com.github.cdcalc.strategy.findBranchStrategy(branch))(git, CalculateConfiguration(branch))
+        val semVer: SemVer = (com.github.cdcalc.strategy.findBranchStrategy(environmentConfiguration))(git, environmentConfiguration)
 
-        val gitFacts = GitFacts(branch = branch, semVer = semVer)
+        val gitFacts = GitFacts(branch = environmentConfiguration.branch, semVer = semVer)
 
-        outputBuildNumber(buildEnvironment, gitFacts, printVersion)
+        outputBuildNumber(environmentConfiguration, gitFacts, printVersion)
         writeVersionToFile(calculateSettings, gitFacts)
 
         return gitFacts
     }
 }
 
-internal fun outputBuildNumber(buildEnvironment: BuildEnvironment, gitFacts: GitFacts, output: (String) -> Unit) {
-    if (buildEnvironment == BuildEnvironment.TeamCity) {
+internal fun outputBuildNumber(environmentConfiguration: EnvironmentConfiguration, gitFacts: GitFacts, output: (String) -> Unit) {
+    if (environmentConfiguration.buildEnvironment == BuildEnvironment.TeamCity) {
         output("##teamcity[buildNumber '${gitFacts.semVer}']")
     } else {
         output(gitFacts.semVer.toString())
