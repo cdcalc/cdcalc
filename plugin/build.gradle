@@ -13,6 +13,12 @@ jar {
     baseName "com.github.cdcalc.gradle.plugin"
 }
 
+test {
+    // NOTE: We're using the TRAVIS environment variable in the production code but it should not be set for the
+    // functional tests. This would be problematic if we should have functional tests for Travis
+    environment "TRAVIS", "false"
+}
+
 publishing {
     publications {
         maven(MavenPublication) {

@@ -11,13 +11,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+
 class GitFlowTests {
     lateinit var sut: Calculate
     lateinit var git: Git
 
     @BeforeEach fun before() {
         git = initGitFlow()
-        sut = Calculate(git)
+        sut = Calculate(git, CalculateSettings(), ::standAloneTestConfiguration)
     }
 
     @Test

@@ -16,7 +16,7 @@ class DevelopBranchTests {
     @BeforeEach
     fun before() {
         git = initGitFlow()
-        sut = Calculate(git)
+        sut = Calculate(git, CalculateSettings(), ::standAloneTestConfiguration)
     }
 
     @Test
