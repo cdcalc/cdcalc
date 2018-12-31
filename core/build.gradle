@@ -65,8 +65,14 @@ bintray {
         userOrg = 'cdcalc'
         name = 'cdcalc'
         websiteUrl = "https://github.com/cdcalc/cdcalc"
+        issueTrackerUrl = 'https://github.com/cdcalc/cdcalc/issues'
         vcsUrl = "https://github.com/cdcalc/cdcalc"
         licenses = ["MIT"]
+        githubRepo = 'cdcalc/cdcalc'
+        githubReleaseNotesFile = 'README.md'
         publish = true
+        version {
+            released = new Date()
+        }
     }
 }

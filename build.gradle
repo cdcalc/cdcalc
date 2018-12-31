@@ -57,9 +57,20 @@ subprojects {
     check.dependsOn jacocoTestReport
 }
 
+TaskProvider<Task> calculateVersionTask = tasks.named('calculateVersion')
+calculateVersionTask.configure {
+    it.doLast() { versionTask ->
+        project.findProject(":core").tasks.named("bintrayUpload").configure { Task t ->
+            t.setProperty("versionName", versionTask.ext.version)
+            t.setProperty("versionVcsTag", "v${versionTask.ext.version}")
+        }
+    }
+}
+
+
 TaskProvider<Task> releaseSetup = tasks.register('releaseSetup')
 releaseSetup.configure {
-    it.dependsOn('calculateVersion')
+    it.dependsOn(calculateVersionTask)
 }
 
 TaskProvider<Task> releaseBuild = tasks.register('releaseBuild')
