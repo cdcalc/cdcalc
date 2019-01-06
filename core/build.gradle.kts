@@ -1,6 +1,4 @@
-import java.time.ZonedDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
+import java.util.Date
 
 plugins {
     id("maven-publish")
@@ -71,7 +69,7 @@ bintray {
         githubReleaseNotesFile = "README.md"
         publish = true
         with(version) {
-            released = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+            released = Date().toString()
         }
     }
 }

@@ -67,7 +67,6 @@ calculateVersionTask.configure {
     }
 }
 
-
 TaskProvider<Task> releaseSetup = tasks.register('releaseSetup')
 releaseSetup.configure {
     it.dependsOn(calculateVersionTask)
