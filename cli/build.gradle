@@ -1,6 +1,0 @@
-dependencies {
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-}
-
-apply plugin: 'application'
-mainClassName = "com.github.cdcalc.cli.ApplicationKt"
