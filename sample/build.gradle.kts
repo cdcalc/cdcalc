@@ -58,12 +58,7 @@ bintray {
 }
 
 // Custom calculate version tasks
-val calculateAndSetVersion = tasks.register(
-        "calculateAndSetVersion",
-        com.github.cdcalc.gradle.CalculateVersionTask::class.java
-)
-
-calculateAndSetVersion.configure {
+val calculateAndSetVersion by tasks.registering(com.github.cdcalc.gradle.CalculateVersionTask::class) {
     this.doLast {
         // version and branch is provided as extra variables
         val calculatedVersion: String = this.extra.get("version") as String
@@ -80,8 +75,7 @@ calculateAndSetVersion.configure {
     }
 }
 
-val releaseLocal = tasks.register("releaseLocal")
-releaseLocal.configure {
+val releaseLocal by tasks.registering {
     group = "Publishing"
     description = "Calculate version and release to maven local"
     dependsOn("calculateVersion", "publishToMavenLocal")
