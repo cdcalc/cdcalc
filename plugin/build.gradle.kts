@@ -22,15 +22,6 @@ tasks {
     }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifactId = "com.github.cdcalc.gradle.plugin"
-        }
-    }
-}
-
 gradlePlugin {
     plugins {
         register("calculateSemVerPlugin") {

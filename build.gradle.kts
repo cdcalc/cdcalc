@@ -1,3 +1,4 @@
+import com.github.cdcalc.gradle.CalculateVersionTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -12,10 +13,13 @@ plugins {
     kotlin("jvm") version "1.3.11"
     id("com.github.cdcalc") version "0.0.21"
     id("com.github.ben-manes.versions") version "0.20.0" apply false
+
+    id("com.dorongold.task-tree") version "1.3.1"
 }
 
 allprojects {
     group = "com.github.cdcalc"
+    // version = "0.0.1-beta.1337"
 }
 
 subprojects {
@@ -61,41 +65,36 @@ subprojects {
         }
     }
 }
-/*
-TaskProvider<Task> calculateVersionTask = tasks.named('calculateVersion')
-calculateVersionTask.configure {
-    it.doLast() { versionTask ->
-        project.findProject(":core").tasks.named("bintrayUpload").configure { Task t ->
-            t.setProperty("versionName", versionTask.ext.version)
-            t.setProperty("versionVcsTag", "v${versionTask.ext.version}")
+
+tasks {
+    val calculateVersion = named<CalculateVersionTask>("calculateVersion") {
+        doLast {
+            val version = extra.get("version") as String
+            project.findProject(":core")!!.tasks.named("bintrayUpload") {
+                setProperty("versionName", version)
+                setProperty("versionVcsTag", "v$version")
+            }
         }
     }
-}
 
-TaskProvider<Task> releaseSetup = tasks.register('releaseSetup')
-releaseSetup.configure {
-    it.dependsOn(calculateVersionTask)
-}
+    val releaseSetup by registering {
+        dependsOn(calculateVersion)
+    }
 
-TaskProvider<Task> releaseBuild = tasks.register('releaseBuild')
-releaseBuild.configure {
-    it.dependsOn(releaseSetup)
-    it.mustRunAfter(releaseSetup)
-    it.dependsOn(':core:build', ':plugin:build', ':cli:build')
-}
+    val releaseBuild by registering {
+        mustRunAfter(releaseSetup)
+        dependsOn(":core:build", ":plugin:build", ":cli:build")
+    }
 
-TaskProvider<Task> releasePublish = tasks.register('releasePublish')
-releasePublish.configure {
-    it.dependsOn(releaseBuild)
-    it.dependsOn(':core:bintrayUpload', ':plugin:publishPlugins')
-    it.mustRunAfter(releaseBuild)
-}
+    val releasePublish by registering {
+        mustRunAfter(releaseBuild)
+        dependsOn(":core:bintrayUpload", ":plugin:publishPlugins")
+    }
 
-TaskProvider<Task> release = tasks.register('release')
-release.configure {
-    it.dependsOn(releasePublish)
+    register("release") {
+        dependsOn(releaseSetup, releaseBuild, releasePublish)
+    }
 }
-*/
 
 project(":plugin") {
     dependencies {
