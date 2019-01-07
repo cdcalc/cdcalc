@@ -1,62 +1,67 @@
-buildscript {
-    ext.kotlin_version = '1.3.11'
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
     repositories {
         mavenCentral()
         jcenter()
     }
-    dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
 
 plugins {
-    id "com.github.cdcalc" version "0.0.21"
+    base
+    kotlin("jvm") version "1.3.11"
+    id("com.github.cdcalc") version "0.0.21"
+    id("com.github.ben-manes.versions") version "0.20.0" apply false
 }
 
 allprojects {
-    group = 'com.github.cdcalc'
+    group = "com.github.cdcalc"
 }
 
 subprojects {
-    apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'kotlin'
-    apply plugin: 'jacoco'
+    apply(plugin = "com.github.ben-manes.versions")
+    apply(plugin = "kotlin")
+    apply(plugin = "jacoco")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+
 
     repositories {
         jcenter()
         mavenLocal()
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
             jvmTarget = "1.8"
         }
     }
 
     dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.11")
 
-        testCompile("org.junit.jupiter:junit-jupiter-api:5.4.0-M1")
-        testCompile("org.junit.jupiter:junit-jupiter-params:5.4.0-M1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.0-M1")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.0-M1")
         testRuntime("org.junit.jupiter:junit-jupiter-engine:5.4.0-M1")
     }
 
-    test {
-        useJUnitPlatform()
-    }
+    tasks {
+        test {
+            useJUnitPlatform()
+        }
 
-    jacocoTestReport {
-        reports {
-            xml.enabled = true
-            html.enabled = true
+        val jacocoTestReport = named<JacocoReport>("jacocoTestReport") {
+            reports {
+                xml.isEnabled = true
+                html.isEnabled = true
+            }
+        }
+
+        check {
+            dependsOn(jacocoTestReport)
         }
     }
-
-    check.dependsOn jacocoTestReport
 }
-
+/*
 TaskProvider<Task> calculateVersionTask = tasks.named('calculateVersion')
 calculateVersionTask.configure {
     it.doLast() { versionTask ->
@@ -90,19 +95,21 @@ TaskProvider<Task> release = tasks.register('release')
 release.configure {
     it.dependsOn(releasePublish)
 }
+*/
 
-project(':plugin') {
+project(":plugin") {
     dependencies {
-        compile project(':core')
+        implementation(project(":core"))
     }
 }
 
-project(':cli') {
+project(":cli") {
     dependencies {
-        compile project(':core')
+        implementation(project(":core"))
     }
 }
 
-wrapper {
-    gradleVersion = "5.1"
+tasks.wrapper {
+    this.gradleVersion = "5.1"
+    this.distributionType = Wrapper.DistributionType.ALL
 }
