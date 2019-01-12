@@ -19,7 +19,6 @@ plugins {
 
 allprojects {
     group = "com.github.cdcalc"
-    // version = "0.0.1-beta.1337"
 }
 
 subprojects {
@@ -91,8 +90,17 @@ tasks {
         dependsOn(":core:bintrayUpload", ":plugin:publishPlugins")
     }
 
+    val releasePublishLocal by registering {
+        mustRunAfter(releaseBuild)
+        dependsOn(":core:publishToMavenLocal", ":plugin:publishToMavenLocal")
+    }
+
     register("release") {
         dependsOn(releaseSetup, releaseBuild, releasePublish)
+    }
+
+    register("releaseLocal") {
+        dependsOn(releaseSetup, releaseBuild, releasePublishLocal)
     }
 }
 
