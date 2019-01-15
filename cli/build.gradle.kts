@@ -1,5 +1,6 @@
 plugins {
     application
+    `maven-publish`
 }
 
 dependencies {
@@ -10,3 +11,14 @@ dependencies {
 application {
     mainClassName = "com.github.cdcalc.cli.ApplicationKt"
 }
+
+publishing {
+    publications {
+        register<MavenPublication>("cli") {
+            from(components["java"])
+            groupId = "com.github.cdcalc"
+            artifactId = "cdcalc-cli"
+        }
+    }
+}
+

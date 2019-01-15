@@ -92,7 +92,7 @@ tasks {
 
     val releasePublishLocal by registering {
         mustRunAfter(releaseBuild)
-        dependsOn(":core:publishToMavenLocal", ":plugin:publishToMavenLocal")
+        dependsOn(":core:publishToMavenLocal", ":plugin:publishToMavenLocal", ":cli:publishToMavenLocal")
     }
 
     register("release") {
