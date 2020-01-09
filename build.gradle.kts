@@ -10,7 +10,8 @@ buildscript {
 
 plugins {
     base
-    kotlin("jvm") version "1.3.11"
+    kotlin("jvm") version "1.3.61"
+
     id("com.github.cdcalc") version "0.0.21"
     id("com.github.ben-manes.versions") version "0.20.0" apply false
 
@@ -117,6 +118,6 @@ project(":cli") {
 }
 
 tasks.wrapper {
-    this.gradleVersion = "5.1"
+    this.gradleVersion = "6.0.1"
     this.distributionType = Wrapper.DistributionType.ALL
 }
